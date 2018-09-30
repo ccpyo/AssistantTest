@@ -30,12 +30,12 @@ def TTS(sentence):
     voice.set('xml:gender', 'Female')
     voice.set('name', 'Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)')
 
+    #傳入欲轉換之文字
     voice.text = sentence
-    # 在當前目錄建立 speech 資料夾
-    #os.makedirs('speech/', exist_ok=True)
+
     # 發出請求，由於是下載檔案，所以設置 stream = True
-    response = requests.post('https://speech.platform.bing.com/synthesize',
-                             data=ElementTree.tostring(body), headers=headers, stream=True)
+    response = requests.post('https://speech.platform.bing.com/synthesize', data=ElementTree.tostring(body), headers=headers, stream=True)
+
     # Status Code 不是 200 就報錯
     if response.status_code != 200:
         print('取得音檔失敗')
@@ -47,7 +47,8 @@ def TTS(sentence):
             for chunk in response:
                 f.write(chunk)
     sound = '{}.wav'.format(fp.name)
-    print(sound)
+    #print(sound)
+    #播放wav
     wavplay(sound)
 
-#getSpeechFile()
+TTS('123')
