@@ -3,7 +3,7 @@ from xml.etree import ElementTree
 import os
 import tempfile
 #from Speak import speak
-#from wav import wavplay
+from wav import wavplay
 
 def TTS(sentence):
     # 在 header 中附帶 key(金鑰)，並用 post 的方法發送 request
