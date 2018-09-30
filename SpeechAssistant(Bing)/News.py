@@ -25,7 +25,7 @@ def all_news(last):
         else:
             news = last['articles'][i]['title']+ '。\n' + last['articles'][i]['description']+ '。\n'
         #print(news)
-        TTS(news)
+        TTS(news,'中文')
 
     #ticks2=time.time()
     #print(ticks2-ticks)

@@ -5,7 +5,8 @@ import tempfile
 #from Speak import speak
 from wav import wavplay
 
-def TTS(sentence):
+def TTS(sentence,la):
+
     # 在 header 中附帶 key(金鑰)，並用 post 的方法發送 request
     headers = {'Ocp-Apim-Subscription-Key': '614602375c2a488099fdccacf0181bf0'}
     response = requests.post('https://api.cognitive.microsoft.com/sts/v1.0/issueToken', headers=headers)
@@ -22,18 +23,21 @@ def TTS(sentence):
                'X-Microsoft-OutputFormat': 'riff-16khz-16bit-mono-pcm',
                'Authorization': 'Bearer ' + access_token}
 
-    #<speak version="1.0" xml:lang="zh-TW"> <voice xml:lang="zh-TW" name="Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)"> </voice> </speak>
+    #<speak version="1.0" xml:lang="en-US"> <voice xml:lang="en-US" name="Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)"> </voice></speak>
+    #<speak version="1.0" xml:lang="ja-JP"> <voice xml:lang="ja-JP" name="Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)"> </voice></speak>
+    #<speak version="1.0" xml:lang="zh-TW"> <voice xml:lang="zh-TW" name="Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)"> </voice> </speak> /中英
     body = ElementTree.Element('speak', version='1.0')
-    body.set('xml:lang', 'zh-TW')
+    body.set('xml:lang',language.get(la))
     voice = ElementTree.SubElement(body, 'voice')
-    voice.set('xml:lang', 'zh-TW')
+    voice.set('xml:lang', language.get(la))
     voice.set('xml:gender', 'Female')
-    voice.set('name', 'Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)')
+    #voice.set('name', 'Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)')
+    voice.set('name', vo.get(la))
 
     #傳入欲轉換之文字
     voice.text = sentence
 
-    # 發出請求，由於是下載檔案，所以設置 stream = True
+    # 發出請求下載檔案
     response = requests.post('https://speech.platform.bing.com/synthesize', data=ElementTree.tostring(body), headers=headers, stream=True)
 
     # Status Code 不是 200 就報錯
@@ -49,6 +53,18 @@ def TTS(sentence):
     sound = '{}.wav'.format(fp.name)
     #print(sound)
     #播放wav
+
     wavplay(sound)
 
-TTS('123')
+language = {
+    '中文' : 'zh-TW',
+    '英文' : 'en-US',
+    '日文' : 'ja-JP'
+}
+vo = {
+    '中文' : 'Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)',
+    '英文' : 'Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)',
+    '日文' : 'Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)'
+}
+
+#TTS('気持ち悪い','日文')
